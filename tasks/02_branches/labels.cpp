@@ -1,19 +1,40 @@
 #include "labels.hpp"
 
-// Этот файл нужно реализовать.
-// Сигнатуры в labels.hpp менять нельзя.
-
 std::string SignLabel(int value) {
-    (void)value;
-    return "";
+    if (value < 0) {
+        return "negative";
+    }
+    if (value == 0) {
+        return "zero";
+    }
+    else {
+        return "positive";
+    }
 }
 
 std::string ParityLabel(int value) {
-    (void)value;
-    return "";
+    if (value % 2 == 0) {
+        return "even";
+    }else {
+    return "odd";
+    }
 }
 
 std::string GradeLabel(int score) {
-    (void)score;
-    return "";
+    if (score < 0 || score > 100) {
+        return "invalid";
+    }
+    if (score <= 59) {
+        return "fail";
+    }
+    if (score <= 74) {
+        return "pass";
+    }
+    if (score <= 89) {
+        return "good";
+    }
+    else {
+        return "excellent";
+    }
+
 }
