@@ -4,16 +4,40 @@
 // Сигнатуры в labels.hpp менять нельзя.
 
 std::string SignLabel(int value) {
-    (void)value;
-    return "";
+    if(value<0){
+        return "negative";
+    }
+    if(value==0){
+        return "zero";
+    }
+    else{
+        return "positive";
+    }
 }
 
 std::string ParityLabel(int value) {
-    (void)value;
-    return "";
+    if (value%2==0){
+        return "even";
+    }
+    else{
+        return "odd";
+    }
 }
 
 std::string GradeLabel(int score) {
-    (void)score;
-    return "";
+    if(score<0 or score>100){
+        return "invalid";
+    }
+    if (score<60) {
+        return "fail";
+    }
+    if (score<75) {
+        return "pass";
+    }
+    if (score<90) {
+        return "good";
+    }
+    else {
+        return "excellent";
+    }
 }
