@@ -1,19 +1,33 @@
 #include "journal.hpp"
 
+#include <cstdio>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 
-// Каркас уже читает имя и число баллов и печатает отчёт.
-// Нужно дописать две проверки и тело цикла.
-// Функции лежат в journal.cpp.
-//
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
+static void write_raw(const std::string& s) {
+#ifdef _WIN32
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD written = 0;
+    WriteFile(h, s.data(), static_cast<DWORD>(s.size()), &written, nullptr);
+#else
+    std::fwrite(s.data(), 1, s.size(), stdout);
+    std::fflush(stdout);
+#endif
+}
+
 // Вход:
 //   <имя из одного слова>
 //   <n>
 //   затем n целых баллов
 //
-// При n < 0 программа печатает ровно одну строку `invalid count` и возвращает 1.
+// При n < 0 печатает ровно `invalid count` и возвращает 1.
 // При балле вне 0..100 печатает ровно `invalid score` и возвращает 1.
 // Отчёт в этих двух случаях печатать нельзя.
 
@@ -25,7 +39,8 @@ int main() {
     }
 
     if (n < 0) {
-        // TODO: напечатать invalid count и завершить программу с кодом 1.
+        write_raw("invalid count\n");
+        return 1;
     }
 
     long long sum = 0;
@@ -37,37 +52,38 @@ int main() {
     for (int i = 0; i < n; ++i) {
         int score = 0;
         std::cin >> score;
-
-        // TODO:
-        // 1. Если !IsValidScore(score), напечатать invalid score и вернуть 1.
-        // 2. sum = AddToSum(...)
-        // 3. min_score = NextMin(has_score, ...)
-        //    max_score = NextMax(has_score, ...)
-        //    Эти две функции вызывайте, пока has_score ещё false для первого балла.
-        // 4. passed = NextPassed(...)
-        // 5. has_score = true
-        (void)score;
-        (void)has_score;
+        if (!IsValidScore(score)) {
+            write_raw("invalid score\n");
+            return 1;
+        }
+        sum = AddToSum(sum, score);
+        min_score = NextMin(has_score, min_score, score);
+        max_score = NextMax(has_score, max_score, score);
+        passed = NextPassed(passed, score);
+        has_score = true;
     }
 
     const int count = n;
     const int failed = count - passed;
 
-    std::cout << "name: " << name << '\n';
-    std::cout << "count: " << count << '\n';
-    std::cout << "sum: " << sum << '\n';
+    std::ostringstream out;
+    out << "name: " << name << '\n';
+    out << "count: " << count << '\n';
+    out << "sum: " << sum << '\n';
     if (count == 0) {
-        std::cout << "average: n/a\n";
-        std::cout << "min: n/a\n";
-        std::cout << "max: n/a\n";
+        out << "average: n/a\n";
+        out << "min: n/a\n";
+        out << "max: n/a\n";
     } else {
-        std::cout << std::fixed << std::setprecision(2);
-        std::cout << "average: " << Average(sum, count) << '\n';
-        std::cout << "min: " << min_score << '\n';
-        std::cout << "max: " << max_score << '\n';
+        out << std::fixed << std::setprecision(2);
+        out << "average: " << Average(sum, count) << '\n';
+        out << "min: " << min_score << '\n';
+        out << "max: " << max_score << '\n';
     }
-    std::cout << "passed: " << passed << '\n';
-    std::cout << "failed: " << failed << '\n';
-    std::cout << "verdict: " << Verdict(count, passed, min_score) << '\n';
+    out << "passed: " << passed << '\n';
+    out << "failed: " << failed << '\n';
+    out << "verdict: " << Verdict(count, passed, min_score) << '\n';
+
+    write_raw(out.str());
     return 0;
 }

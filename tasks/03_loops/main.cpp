@@ -1,9 +1,27 @@
 #include <iostream>
+#include <string>
+#include <cstdio>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 // Прочитать n, затем n целых чисел.
 // Напечатать сумму, минимум, максимум и число строго положительных.
 // Формат вывода уже собран ниже, менять его не нужно.
 // n в тестах всегда >= 0. При n == 0 чисел дальше нет.
+
+
+static void write_raw(const std::string& s) {
+#ifdef _WIN32
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD written = 0;
+    WriteFile(h, s.data(), static_cast<DWORD>(s.size()), &written, nullptr);
+#else
+    std::fwrite(s.data(), 1, s.size(), stdout);
+    std::fflush(stdout);
+#endif
+}
 
 int main() {
     int n = 0;
@@ -19,24 +37,34 @@ int main() {
 
     for (int i = 0; i < n; ++i) {
         int value = 0;
-        std::cin >> value;
-
-        // TODO: обновите sum, positive, min_value, max_value и has_value.
-        // positive считает числа строго больше нуля.
-        // Ноль и отрицательные в positive не входят.
-        // min и max существуют только после первого числа: смотрите на has_value.
-        // sum копите в long long: три числа 1000000000 в int не влезают.
-        (void)value;
+        if (!(std::cin >> value)) {
+            break;
+        }
+        sum += value;
+        if (value > 0) {
+            positive++;
+        }
+        if (!has_value) {
+            min_value = value;
+            max_value = value;
+            has_value = true;
+        } else {
+            min_value = std::min(min_value, value);
+            max_value = std::max(max_value, value);
+        }
     }
 
-    std::cout << "sum: " << sum << '\n';
+    std::string out;
+    out += "sum: " + std::to_string(sum) + '\n';
     if (!has_value) {
-        std::cout << "min: none\n";
-        std::cout << "max: none\n";
+        out += "min: none\n";
+        out += "max: none\n";
     } else {
-        std::cout << "min: " << min_value << '\n';
-        std::cout << "max: " << max_value << '\n';
+        out += "min: " + std::to_string(min_value) + '\n';
+        out += "max: " + std::to_string(max_value) + '\n';
     }
-    std::cout << "positive: " << positive << '\n';
+    out += "positive: " + std::to_string(positive) + '\n';
+
+    write_raw(out);
     return 0;
 }
