@@ -3,46 +3,61 @@
 // Этот файл нужно реализовать.
 // Сигнатуры в journal.hpp менять нельзя.
 
-bool IsValidScore(int score) {
-    (void)score;
-    return false;
+bool IsValidScore(int score) 
+{
+    return score >= 0 && score <= 100;
 }
 
-long long AddToSum(long long sum, int score) {
-    (void)sum;
-    (void)score;
-    return 0;
+long long AddToSum(long long sum, int score) 
+{
+    return sum + score;
 }
 
-int NextMin(bool has_score, int current_min, int score) {
-    (void)has_score;
-    (void)current_min;
-    (void)score;
-    return 0;
+int NextMin(bool has_score, int current_min, int score) 
+{
+    if (has_score == false)
+    {
+        return score;
+    }
+    return score < current_min ? score : current_min;
 }
 
-int NextMax(bool has_score, int current_max, int score) {
-    (void)has_score;
-    (void)current_max;
-    (void)score;
-    return 0;
+int NextMax(bool has_score, int current_max, int score) 
+{
+    if (has_score == false)
+    {
+        return score;
+    }
+    return score > current_max ? score : current_max;
+}
+int NextPassed(int passed, int score)
+{
+    if (score >= 60) 
+    {
+        return passed + 1;
+    }
+    return passed;
 }
 
-int NextPassed(int passed, int score) {
-    (void)passed;
-    (void)score;
-    return 0;
+double Average(long long sum, int count) 
+{
+    return static_cast<double>(sum) / count;
 }
 
-double Average(long long sum, int count) {
-    (void)sum;
-    (void)count;
-    return 0;
+std::string Verdict(int count, int passed, int min_score)
+{
+    if (count == 0) 
+    {
+        return "empty";
+    }
+    if (passed != count) 
+    {
+        return "debt";
+    }
+    if (min_score >= 90) 
+    {
+        return "excellent";
+    }
+    return "ok";
 }
-
-std::string Verdict(int count, int passed, int min_score) {
-    (void)count;
-    (void)passed;
-    (void)min_score;
-    return "";
-}
+  

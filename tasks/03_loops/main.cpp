@@ -1,11 +1,20 @@
 #include <iostream>
 
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
+
+
 // Прочитать n, затем n целых чисел.
 // Напечатать сумму, минимум, максимум и число строго положительных.
 // Формат вывода уже собран ниже, менять его не нужно.
 // n в тестах всегда >= 0. При n == 0 чисел дальше нет.
 
 int main() {
+    #ifdef _WIN32
+_setmode(_fileno(stdout), _O_BINARY);
+#endif
     int n = 0;
     if (!(std::cin >> n)) {
         return 0;
@@ -21,6 +30,24 @@ int main() {
         int value = 0;
         std::cin >> value;
 
+        sum += value;
+
+        if (value > 0) {
+            positive++;
+        }
+        if (has_value == false) {
+            min_value = value;
+            max_value = value;
+            has_value = true;
+        }
+        else {
+            if (value < min_value) {
+                min_value = value;
+            }
+            if (value > max_value) {
+                max_value = value;
+            }
+        }
         // TODO: обновите sum, positive, min_value, max_value и has_value.
         // positive считает числа строго больше нуля.
         // Ноль и отрицательные в positive не входят.
