@@ -25,7 +25,8 @@ int main() {
     }
 
     if (n < 0) {
-        // TODO: напечатать invalid count и завершить программу с кодом 1.
+        std::cout << "invalid count\n";
+        return 1;
     }
 
     long long sum = 0;
@@ -38,16 +39,15 @@ int main() {
         int score = 0;
         std::cin >> score;
 
-        // TODO:
-        // 1. Если !IsValidScore(score), напечатать invalid score и вернуть 1.
-        // 2. sum = AddToSum(...)
-        // 3. min_score = NextMin(has_score, ...)
-        //    max_score = NextMax(has_score, ...)
-        //    Эти две функции вызывайте, пока has_score ещё false для первого балла.
-        // 4. passed = NextPassed(...)
-        // 5. has_score = true
-        (void)score;
-        (void)has_score;
+        if (!IsValidScore(score)) {
+            std::cout << "invalid score\n";
+            return 1;
+        }
+        sum = AddToSum(sum, score);
+        min_score = NextMin(has_score, min_score, score);
+        max_score = NextMax(has_score, max_score, score);
+        passed = NextPassed(passed, score);
+        has_score = true;
     }
 
     const int count = n;
