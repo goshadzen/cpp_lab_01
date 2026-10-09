@@ -3,6 +3,11 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#ifdef _WIN32
+#include <cstdio>
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 // Каркас уже читает имя и число баллов и печатает отчёт.
 // Нужно дописать две проверки и тело цикла.
@@ -18,6 +23,9 @@
 // Отчёт в этих двух случаях печатать нельзя.
 
 int main() {
+#ifdef _WIN32
+    _setmode(_fileno(stdout), _O_BINARY);
+#endif
     std::string name;
     int n = 0;
     if (!(std::cin >> name >> n)) {
@@ -26,6 +34,8 @@ int main() {
 
     if (n < 0) {
         // TODO: напечатать invalid count и завершить программу с кодом 1.
+        std::cout << "invalid count\n";
+        return 1;
     }
 
     long long sum = 0;
@@ -48,6 +58,15 @@ int main() {
         // 5. has_score = true
         (void)score;
         (void)has_score;
+        if (!IsValidScore(score)) {
+            std::cout << "invalid score\n";
+            return 1;
+        }
+        sum = AddToSum(sum, score);
+        min_score = NextMin(has_score, min_score, score);
+        max_score = NextMax(has_score, max_score, score);
+        passed = NextPassed(passed, score);
+        has_score = true;
     }
 
     const int count = n;
