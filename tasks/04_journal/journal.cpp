@@ -1,48 +1,42 @@
 #include "journal.hpp"
+#include <string>
+#include <algorithm>
 
 // Этот файл нужно реализовать.
 // Сигнатуры в journal.hpp менять нельзя.
 
 bool IsValidScore(int score) {
-    (void)score;
-    return false;
+    return score >= 0 && score <= 100;
 }
 
 long long AddToSum(long long sum, int score) {
-    (void)sum;
-    (void)score;
-    return 0;
+    return sum + score;
 }
 
 int NextMin(bool has_score, int current_min, int score) {
-    (void)has_score;
-    (void)current_min;
-    (void)score;
-    return 0;
+    if (!has_score) return score;
+    return std::min(current_min, score);
 }
 
 int NextMax(bool has_score, int current_max, int score) {
-    (void)has_score;
-    (void)current_max;
-    (void)score;
-    return 0;
+    if (!has_score) return score;
+    return std::max(current_max, score);
 }
 
 int NextPassed(int passed, int score) {
-    (void)passed;
-    (void)score;
-    return 0;
+    if (score >= 60){
+        return passed + 1;
+    }
+    return passed;
 }
 
 double Average(long long sum, int count) {
-    (void)sum;
-    (void)count;
-    return 0;
+   return static_cast<double>(sum)/count;
 }
 
 std::string Verdict(int count, int passed, int min_score) {
-    (void)count;
-    (void)passed;
-    (void)min_score;
-    return "";
+    if (count == 0) return "empty";
+    if (passed != count) return "debt";
+    if (min_score >= 90) return "excellent";
+    return "ok";
 }
