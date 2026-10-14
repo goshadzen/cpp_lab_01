@@ -26,6 +26,20 @@ int main() {
         // Ноль и отрицательные в positive не входят.
         // min и max существуют только после первого числа: смотрите на has_value.
         // sum копите в long long: три числа 1000000000 в int не влезают.
+        sum += value;
+        if (value > 0) positive++;
+        
+        if (!has_value) {
+            min_value = value;
+            max_value = value;
+            has_value = true;
+        }
+        else {
+            min_value = std::min(min_value, value);
+            max_value = std::max(max_value, value);
+        }
+
+
         (void)value;
     }
 
